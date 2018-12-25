@@ -1,3 +1,7 @@
+# forked https://github.com/mapillary/mapillary_tools/blob/master/mapillary_tools/process_video.py
+# disable ffprobe for video creation time
+# use os.path.getctime instead
+
 from ffprobe import FFProbe
 import datetime
 import os
@@ -178,11 +182,11 @@ def get_video_start_time(video_file):
     if not os.path.isfile(video_file):
         print("Error, video file {} does not exist".format(video_file))
         return None
-    print os.path.getctime(video_file)
-    print time.strftime("%Y-%m-%dT%H:%M:%S.000000Z", time.localtime(os.path.getctime(video_file) - 28800.0))
     try:
         # time_string = FFProbe(video_file).video[0].creation_time
-        time_string = time.strftime("%Y-%m-%dT%H:%M:%S.000000Z", time.localtime(os.path.getctime(video_file) - 28800.0))  # for dashcam video
+        # for dashcam video
+        time_string = time.strftime("%Y-%m-%dT%H:%M:%S.000000Z", time.gmtime(os.path.getctime(video_file) + time.altzone))
+        # for dashcam video
         try:
             creation_time = datetime.datetime.strptime(
                 time_string, TIME_FORMAT)
